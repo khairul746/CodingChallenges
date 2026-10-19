@@ -3,7 +3,7 @@
 ----INFORMATION-----
 ====================
 source : https://www.hackerrank.com/challenges/weather-observation-station-13/problem
-difficulty: medium
+difficulty: easy
 dbms: mysql
 */
 
