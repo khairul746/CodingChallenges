@@ -7,14 +7,18 @@ difficulty: medium
 dbms: mysql
 */
 
-SELECT w.id, wp.age, w.coins_needed, w.power
-FROM Wands w
-JOIN Wands_Property wp ON w.code = wp.code
-WHERE wp.is_evil = 0 
-AND w.coins_needed = (
-    SELECT MIN(w2.coins_needed)
-    FROM Wands w2
-    JOIN Wands_Property wp2 ON w2.code = wp2.code
-    WHERE wp2.age = wp.age AND w2.power = w.power
+WITH RankedWands AS (
+    SELECT 
+        w.id, 
+        wp.age, 
+        w.coins_needed, 
+        w.power,
+        ROW_NUMBER() OVER (PARTITION BY wp.age, w.power ORDER BY w.coins_needed ASC) as ranking
+    FROM Wands w
+    JOIN Wands_Property wp ON w.code = wp.code
+    WHERE wp.is_evil = 0 
 )
-ORDER BY w.power DESC, wp.age DESC;
+SELECT id, age, coins_needed, power
+FROM RankedWands
+WHERE ranking = 1
+ORDER BY power DESC, age DESC;
