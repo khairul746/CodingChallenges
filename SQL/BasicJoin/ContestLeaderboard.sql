@@ -1,0 +1,21 @@
+/*
+====================
+----INFORMATION-----
+====================
+source : https://www.hackerrank.com/challenges/contest-leaderboard/problem
+difficulty: medium
+dbms: mysql
+*/
+
+WITH MAX_SUBMISSIONS AS (
+    SELECT H.HACKER_ID, H.NAME, MAX(S.SCORE) AS MAX_SCORE
+    FROM HACKERS H
+    JOIN SUBMISSIONS S ON H.HACKER_ID = S.HACKER_ID
+    GROUP BY S.CHALLENGE_ID, H.HACKER_ID, H.NAME
+)
+
+SELECT HACKER_ID, NAME, SUM(MAX_SCORE) AS TOTAL_SCORE
+FROM MAX_SUBMISSIONS
+GROUP BY HACKER_ID, NAME
+HAVING TOTAL_SCORE > 0
+ORDER BY TOTAL_SCORE DESC, HACKER_ID; 
